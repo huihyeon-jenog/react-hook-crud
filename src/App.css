@@ -1,38 +1,167 @@
 .App {
+  box-sizing: border-box;
+  margin: auto;
+  padding: 0;
+  width: 100%;
+  max-width: 1024px;
   text-align: center;
+  color: #333333;
+  letter-spacing: 1.4px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* title
+--------------------*/
+h1 {
+  color: #282c34;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
+/* color
+--------------------*/
+a {
   color: #61dafb;
 }
+.text--red {
+  color: #ff0000;
+}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* table
+--------------------*/
+.table {
+  box-sizing: border-box;
+  display: table;
+  margin: auto;
+  padding: 0;
+  width: 100%;
+  text-align: center;
+}
+.table .table__header {
+  display: table-header-group;
+  margin: auto;
+  padding: 0;
+  background: #282c34;
+  color: #ffffff;
+}
+.table .table__body {
+  display: table-row-group;
+}
+.table .tr {
+  display: table-row;
+}
+.table .table__body .tr:nth-child(even) {
+  background: #f0f0f0;
+}
+.table .th,
+.table .td {
+  box-sizing: border-box;
+  display: table-cell;
+  margin: auto;
+  padding: 5px 10px;
+}
+
+/* form
+--------------------*/
+.form {
+  box-sizing: border-box;
+  margin: auto;
+  padding: 15px 0;
+  text-align: left;
+  border-radius: 3px;
+}
+.text__field {
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 5px;
+  width: 100%;
+  border-bottom: 1px solid #dddddd;
+}
+.text__field:nth-of-type(even) {
+  background: #f0f0f0;
+}
+.text__field:nth-last-child(1) {
+  padding-top: 15px;
+  text-align: center;
+  background: #ffffff;
+  border-bottom: 1px solid transparent;
+}
+.text__field .title {
+  display: inline-block;
+  width: 30%;
+}
+.text__field .text {
+  display: inline-block;
+  width: 69%;
+}
+
+/* btn
+--------------------*/
+.btn--delete,
+.btn--modify,
+.btn--save,
+.btn--add,
+.btn--cancel {
+  cursor: pointer;
+  display: inline-block;
+  margin: auto 5px;
+  padding: 3px 5px;
+  background: #61dafb;
+  color: #282c34;
+  font-size: 16px;
+  border: 1px solid #61dafb;
+  border-radius: 3px;
+}
+
+.btn--delete:hover,
+.btn--modify:hover,
+.btn--add:hover,
+.btn--save:hover,
+.btn--cancel:hover {
+  background: #61dafb;
+  color: #ffffff;
+  box-shadow: 0px 2px 4px #dddddd;
+}
+
+.btn--add,
+.btn--save,
+.btn--cancel {
+  width: 120px;
+}
+
+/*------------------
+ * RESPONSIVE
+\*------------------*/
+@media screen and (max-width: 1024px) {
+  .App {
+    width: 90%;
+    max-width: 1024px;
   }
-  to {
-    transform: rotate(360deg);
+  /* table */
+  .table .table__header {
+    display: none;
+  }
+  .table .tr {
+    display: inline-block;
+    width: 100%;
+    border: 1px solid #dddddd;
+  }
+  .table .tr:nth-last-child(even) {
+    background: #f0f0f0;
+  }
+  .table .tr:nth-last-child(1) {
+    border-bottom: 1px solid #dddddd;
+  }
+  .table .th:before,
+  .table .td:before {
+    content: attr(data-title) " : ";
+  }
+  .table .th,
+  .table .td {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+  }
+
+  /* form */
+  .text__field .text {
+    width: 68%;
   }
 }
