@@ -1,45 +1,18 @@
 import "./App.css";
-import { useState } from "react";
+import api from "./api/data";
+import React, { useEffect, useState } from "react";
+import Axios from "axios";
 
-const data = [
-  {
-    no: "1",
-    name: "User1",
-    phone: "02-1234567",
-    email: "aaa@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "2",
-    name: "User2",
-    phone: "02-1234567",
-    email: "ccc@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "3",
-    name: "User3",
-    phone: "02-1234567",
-    email: "ddd@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "4",
-    name: "User4",
-    phone: "02-1234567",
-    email: "eee@mail.com",
-    del: false,
-    modify: false,
-  },
-];
 function App() {
   const [nameInput, setNameInput] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
-  const [list, setList] = useState(data);
+  const [list, setList] = useState([]);
+
+  const getData = async () => {
+    const res = await api.get("/data");
+    setList(res.data);
+  };
 
   const delItem = (e) => {
     setList(list.filter((item) => item.no !== e));
@@ -55,7 +28,7 @@ function App() {
     setPhoneInput(newData[0].phone);
     setEmailInput(newData[0].email);
   };
-  const addItem = () => {
+  const addItem = async () => {
     const newData = {
       no: list.length + 1,
       name: nameInput,
@@ -64,8 +37,24 @@ function App() {
       del: false,
       modify: false,
     };
-
-    setList([...list, newData]);
+    console.log(newData);
+    const res = await api
+      .post("/data", {
+        no: list.length + 1,
+        name: nameInput,
+        phone: phoneInput,
+        email: emailInput,
+        del: false,
+        modify: false,
+      })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (error) {
+        console.log("오류:" + error);
+      });
+    console.log(res);
+    setList([...list, res]);
     cancelItem();
   };
   const saveItem = () => {
@@ -83,10 +72,24 @@ function App() {
         return item;
       }
     });
+    Axios.post("http://localhost:4000/data", {
+      no: list.length + 1,
+      name: nameInput,
+      phone: phoneInput,
+      email: emailInput,
+      del: list.del,
+      modify: !list.modify,
+    })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     setNameInput("");
     setPhoneInput("");
     setEmailInput("");
-    setList(newData);
+    // setList(newData);
   };
   const cancelItem = () => {
     setNameInput("");
@@ -104,6 +107,9 @@ function App() {
   const changeEmail = (e) => {
     setEmailInput(e.target.value);
   };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div className="App">
       <h1>Main UI</h1>

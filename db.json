@@ -1,0 +1,53 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "data" : [
+  {
+    "no": "1",
+    "name": "User1",
+    "phone": "02-1234567",
+    "email": "aaa@mail.com",
+    "del": false,
+    "modify": false
+  },
+  {
+    "no": "2",
+    "name": "User2",
+    "phone": "02-1234567",
+    "email": "ccc@mail.com",
+    "del": false,
+    "modify": false
+  },
+  {
+    "no": "3",
+    "name": "User3",
+    "phone": "02-1234567",
+    "email": "ddd@mail.com",
+    "del": false,
+    "modify": false
+  },
+  {
+    "no": "4",
+    "name": "User4",
+    "phone": "02-1234567",
+    "email": "eee@mail.com",
+    "del": false,
+    "modify": false
+  }
+]
+}
