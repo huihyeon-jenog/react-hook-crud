@@ -1,48 +1,34 @@
 import "./App.css";
-import { useState } from "react";
+import api from "./api/data";
+import React, { useEffect, useState } from "react";
 
-const data = [
-  {
-    no: "1",
-    name: "User1",
-    phone: "02-1234567",
-    email: "aaa@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "2",
-    name: "User2",
-    phone: "02-1234567",
-    email: "ccc@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "3",
-    name: "User3",
-    phone: "02-1234567",
-    email: "ddd@mail.com",
-    del: false,
-    modify: false,
-  },
-  {
-    no: "4",
-    name: "User4",
-    phone: "02-1234567",
-    email: "eee@mail.com",
-    del: false,
-    modify: false,
-  },
-];
 function App() {
   const [nameInput, setNameInput] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
-  const [list, setList] = useState(data);
+  const [list, setList] = useState([]);
 
-  const delItem = (e) => {
-    setList(list.filter((item) => item.no !== e));
+  const getData = async () => {
+    await api
+      .get("/data")
+      .then((res) => {
+        console.log(res);
+        setList(res.data);
+      })
+      .catch((error) => {
+        console.log("오류:" + error);
+      });
+  };
+  const delItem = async (e) => {
+    await api
+      .delete(`/data/${e}`)
+      .then((res) => {
+        console.log(res);
+        getData();
+      })
+      .catch((error) => {
+        console.log("오류:" + error);
+      });
   };
   const modifyItem = (e) => {
     const newData = list.filter((item) => {
@@ -55,7 +41,7 @@ function App() {
     setPhoneInput(newData[0].phone);
     setEmailInput(newData[0].email);
   };
-  const addItem = () => {
+  const addItem = async () => {
     const newData = {
       no: list.length + 1,
       name: nameInput,
@@ -64,29 +50,37 @@ function App() {
       del: false,
       modify: false,
     };
-
-    setList([...list, newData]);
+    await api
+      .post("/data", newData)
+      .then(function (res) {
+        console.log(res);
+        setList([...list], res.data);
+        getData();
+      })
+      .catch(function (error) {
+        console.log("오류:" + error);
+      });
     cancelItem();
   };
-  const saveItem = () => {
-    const newData = list.map((item) => {
-      if (item.modify === true) {
-        return {
-          no: item.no,
-          name: nameInput,
-          phone: phoneInput,
-          email: emailInput,
-          del: item.del,
-          modify: !item.modify,
-        };
-      } else {
-        return item;
-      }
-    });
-    setNameInput("");
-    setPhoneInput("");
-    setEmailInput("");
-    setList(newData);
+  const saveItem = async (e) => {
+    await api
+      .put(`/data/${e}`, {
+        no: e,
+        name: nameInput,
+        phone: phoneInput,
+        email: emailInput,
+        del: false,
+        modify: false,
+      })
+      .then(function (res) {
+        console.log(res);
+        setList(list);
+        getData();
+      })
+      .catch(function (error) {
+        console.log("오류:" + error);
+      });
+    cancelItem();
   };
   const cancelItem = () => {
     setNameInput("");
@@ -103,6 +97,11 @@ function App() {
   const changeEmail = (e) => {
     setEmailInput(e.target.value);
   };
+  useEffect(() => {
+    getData();
+    console.log("액션");
+  }, []);
+
   return (
     <div className="App">
       <h1>Main UI</h1>
@@ -119,18 +118,42 @@ function App() {
         <div className="table__body">
           {list.map((item) => {
             return (
-              <div className="tr">
+              <div className="tr" key={item.id}>
                 <div className="td" data-title="No.">
                   {item.no}
                 </div>
                 <div className="td" data-title="Name">
-                  {item.name}
+                  {item.modify ? (
+                    <input
+                      type="text"
+                      value={nameInput}
+                      onChange={changeName}
+                    />
+                  ) : (
+                    item.name
+                  )}
                 </div>
                 <div className="td" data-title="Phone">
-                  {item.phone}
+                  {item.modify ? (
+                    <input
+                      type="text"
+                      value={phoneInput}
+                      onChange={changePhone}
+                    />
+                  ) : (
+                    item.phone
+                  )}
                 </div>
                 <div className="td" data-title="Email">
-                  {item.email}
+                  {item.modify ? (
+                    <input
+                      type="text"
+                      value={emailInput}
+                      onChange={changeEmail}
+                    />
+                  ) : (
+                    item.email
+                  )}
                 </div>
                 <div className="td" data-title="Action">
                   <div className="btn--delete" onClick={() => delItem(item.no)}>
@@ -138,9 +161,15 @@ function App() {
                   </div>
                   <div
                     className="btn--modify"
-                    onClick={() => modifyItem(item.no)}
+                    onClick={() => {
+                      if (item.modify) {
+                        saveItem(item.no);
+                      } else {
+                        modifyItem(item.no);
+                      }
+                    }}
                   >
-                    Modify
+                    {item.modify ? "완료" : "Modify"}
                   </div>
                 </div>
               </div>
